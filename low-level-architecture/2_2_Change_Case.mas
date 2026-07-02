@@ -1,0 +1,256 @@
+﻿/main method
+JnS subInputNames
+JnS subPrintString
+JnS subChangeCase
+Load threehundred
+Store printNameAdd
+JnS subPrintString
+Halt
+
+
+/subroutine for inputting names
+subInputNames,HEX 0
+/loop so that it goes on until the user inputs a $
+Loop,		  Input
+              StoreI myNameAdd
+			  Subt dollarsign
+              Skipcond 400
+              Jump iscommainput
+			  JumpI subInputNames
+                            
+AddnextLine,  Load myNameAdd
+			  Add one
+              Store myNameAdd
+              Load count
+			  Subt one
+              Store count
+              Skipcond 800
+              Jump Addcommasorfullstop
+			  Jump Loop
+
+/This is to check whether the user inputted a comma or not
+iscommainput, LoadI myNameAdd
+			  Subt comma
+              Skipcond 400
+              Jump isfullstopinput
+              Jump commainput
+
+/This is to add comma and store a temporary variable so that I can
+/store in the right address
+commainput,	Load count
+            Store Tempcomma
+            Load five
+            Store count
+            Load myNameAdd
+			Add one
+            Store myNameAdd
+            Load commaornot
+			Add one
+            Store commaornot
+            Jump Loop
+
+/This is to check whether the user inputted a full stop or not
+isfullstopinput, LoadI myNameAdd
+                 Subt fullstop
+                 Skipcond 400
+                 Jump AddnextLine
+                 Jump AddingmyNameAdd
+               
+/This code right here is so that the next name can be stored at the right address
+/if the input is less than 5 characters. Also resets the count to be used
+/in the next loop
+AddingmyNameAdd, Load count
+           		 Store Tempfullstop
+		   		 Load myNameAdd
+		   		 Add Tempcomma
+		         Store myNameAdd
+		         Add Tempfullstop
+                 Store myNameAdd
+                 Load five
+                 Store count
+                 Load myNameAdd
+                 Add five
+                 Store myNameAdd
+                 Load zero
+				 Store Tempcomma
+				 Load zero
+                 Store Tempfullstop
+                 Load commaornot
+ 				 Subt one
+                 Store commaornot
+                 Jump Loop
+
+/This is to check whether we need to add a comma or a full stop              
+Addcommasorfullstop, Load commaornot
+					 Skipcond 400
+                     Jump Addfullstop
+					 Jump Addcomma
+
+/This is the code to add a comma
+Addcomma, Load comma
+	      StoreI myNameAdd
+          Load myNameAdd
+          Add one
+          Store myNameAdd
+          Load commaornot
+          Add one
+          Store commaornot
+          Load count
+          Add five
+          Store count
+          Jump Loop
+
+/This is the code to add a fullstop
+Addfullstop, Load fullstop
+ 			 StoreI myNameAdd
+             Load myNameAdd
+             Add five
+             Store myNameAdd
+             Add Tempcomma
+			 Store myNameAdd
+             Load commaornot
+             Subt one
+             Store commaornot
+             Load count
+             Add five
+             Store count
+             Load zero
+             Store Tempcomma
+             Jump Loop
+
+/this subroutine is for printing the strings out
+subPrintString, Hex 0
+/this is the loop for printing as well as checking if the value stored is a comma or not
+/ if it is then we print out the space character
+Loopprint,	LoadI printNameAdd
+			Subt comma
+			Skipcond 400
+            Jump isfullstopprint
+            Load space
+            Output
+			Load printNameAdd
+			Add one
+            Store printNameAdd
+			Jump Loopprint
+
+/This is to check whether the value in the memory is a full stop or not
+/ and if it is then it will print out a new line
+isfullstopprint, LoadI printNameAdd
+				 Subt fullstop
+				 Skipcond 400
+                 Jump isdollar
+                 Load newline
+				 Output
+                 Load printNameAdd
+				 Add one
+                 Store printNameAdd
+				 Jump Loopprint
+
+
+/This is to check whether the value in the memory is a dollar sign or not and if it is
+/then we jump out of the subroutine
+isdollar, LoadI printNameAdd
+		  Subt dollarsign
+		  Skipcond 400
+          Jump is0
+		  JumpI subPrintString
+
+/This is to check whether the value in the memory is a 0000 or not and if it is,
+/then we just ignore it and it will just continue on into the loop
+is0, LoadI printNameAdd
+	 Skipcond 400
+     Jump Print
+     Load printNameAdd
+	 Add one
+     Store printNameAdd
+	 Jump Loopprint
+
+/This is to print the output of alphabet characters
+Print, LoadI printNameAdd
+	   Output
+       Load printNameAdd
+	   Add one
+       Store printNameAdd
+       Jump Loopprint
+
+/subroutine for changing capital to lower case or lower case to capital
+subChangeCase, Hex 0
+/This is the loop for changing the cases and to check whether the value stored is 
+/a comma or not
+Loopchange, LoadI changeCaseName
+			Subt comma
+            Skipcond 400
+            Jump isfullstopchange
+			Load changeCaseName
+			Add one
+            Store changeCaseName
+            Jump Loopchange
+
+/This is to check whether the value is a full stop or not
+isfullstopchange, LoadI changeCaseName
+				  Subt fullstop
+                  Skipcond 400
+                  Jump isdollarchange
+                  Load changeCaseName
+				  Add one
+                  Store changeCaseName
+				  Jump Loopchange
+                  
+/This is to check whether the value is a dollar sign or not
+isdollarchange, LoadI changeCaseName
+				Subt dollarsign
+				Skipcond 400
+                Jump is0change
+                JumpI subChangeCase
+
+/This is to check whether the value is a 0000 or not
+is0change, LoadI changeCaseName
+		   Skipcond 400
+           Jump changeNameLowerCase
+           Load changeCaseName
+		   Add one
+           Store changeCaseName
+		   Jump Loopchange
+
+/This is to check whether the value stored is a capital letter or not and if it is not
+/then we change it into a capital letter
+changeNameLowerCase, LoadI changeCaseName
+					 Subt ninety
+                     Skipcond 800
+                     Jump changeNameCapital
+                     LoadI changeCaseName
+					 Subt thirtytwo
+					 StoreI changeCaseName
+					 Load changeCaseName
+					 Add one
+            		 Store changeCaseName
+					 Jump Loopchange
+
+/This is to change the letter from capital letter to lower case
+changeNameCapital, LoadI changeCaseName
+				   Add thirtytwo
+				   StoreI changeCaseName
+				   Load changeCaseName
+				   Add one
+                   Store changeCaseName
+				   Jump Loopchange
+
+
+myNameAdd, Hex 300
+printNameAdd, Hex 300
+commaornot, Dec 0
+count, DEC 5
+zero, DEC 0
+one, DEC 1
+five, DEC 5
+comma, DEC 44
+fullstop, DEC 46
+dollarsign, DEC 36
+Tempcomma, Dec 0
+Tempfullstop, Dec 0
+space, Dec 32
+newline, Dec 10
+changeCaseName, Hex 300
+thirtytwo, Dec 32
+threehundred, Hex 300
+ninety, Dec 90
