@@ -16,7 +16,7 @@ This repository consolidates core units projects and system utilities developed 
 
 
 
-\## 📱 Project Index 
+\## Project Index 
 
 
 
