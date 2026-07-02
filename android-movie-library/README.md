@@ -23,7 +23,7 @@ The user interface flows state changes cleanly through android lifecycle. The in
 
 | Double-Tap Gesture Initialization State |  Movie List Querying |
 |:---:|:---:|
-| ![Form Input View](../images/movie-form.png) | ![Dynamic Search List View](../images/movie-list.png) |
+| ![Form Input View](../images/movie-doubletap.png) | ![Dynamic Search List View](../images/movie-list.png) |
 
 ### 2. Asynchronous Notification Gateway Interception
 Demonstrating background system event interception via a specialized `BroadcastReceiver` gateway. The app listens for explicit intent strings, parses incoming semicolon-delimited text payloads, and routes the tokenized properties to instantly populate the application’s input fields:
